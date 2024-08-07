@@ -1,0 +1,68 @@
+@page
+@using Domain
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Book</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Book.Title" class="control-label"></label>
+                <input asp-for="Book.Title" class="form-control" />
+                <span asp-validation-for="Book.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Book.ISBN" class="control-label"></label>
+                <input asp-for="Book.ISBN" class="form-control" />
+                <span asp-validation-for="Book.ISBN" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Book.PublicationYear" class="control-label"></label>
+                <input asp-for="Book.PublicationYear" class="form-control" />
+                <span asp-validation-for="Book.PublicationYear" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Book.Language" class="control-label"></label>
+                 <select asp-for="Book.Language" asp-items="@Html.GetEnumSelectList<ELanguage>()" class="form-control"></select>
+                <span asp-validation-for="Book.Language" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Book.Summary" class="control-label"></label>
+                <input asp-for="Book.Summary" class="form-control" />
+                <span asp-validation-for="Book.Summary" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Book.PublisherId" class="control-label"></label>
+                <select asp-for="Book.PublisherId" class="form-control" asp-items="ViewBag.PublisherId"></select>
+                <span asp-validation-for="Book.PublisherId" class="text-danger"></span>
+            </div>
+          <div class="form-group">
+                <label asp-for="Book.ImageUrl" class="control-label"></label>
+                <input asp-for="Book.ImageUrl" class="form-control" />
+                <span asp-validation-for="Book.ImageUrl" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="Book.Id" />
+            <div class="form-group mt-3">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

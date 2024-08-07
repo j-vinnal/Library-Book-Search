@@ -1,0 +1,275 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+
+
+<style>
+
+.sticky-nav{
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+}
+
+.sticky-search-container {
+    position: sticky;
+    top: 56px;
+    background-color: white;
+    z-index: 100;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 56px;
+}
+
+    .custom-row {
+        height: 200px;
+    }
+    a.title {
+        color: inherit;
+        text-decoration: none;
+        font-size: 24px;
+
+    }
+
+    a.read-more {
+        color: inherit;
+    }
+
+    .avg {
+        font-size: 1.25em;
+        font-weight: 500;
+    }
+
+    .author_title {
+        font-weight: 500;
+    }
+
+    .dd_col {
+        font-size: 14px;
+        font-weight: 400;
+        color: #4f4f4d;
+    }
+
+    .scrollable-col {
+        padding-top: 30px;
+  
+    }
+
+  
+    .reset-button {
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+
+    .reset-button span {
+        font-size: 1.25rem;
+    }
+</style>
+
+<div class="sticky-search-container">
+<form method="get">
+    <div class="form-group mt-2" style="margin-right: 300px">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="input-group">
+            <input asp-for="Search" type="search" class="form-control rounded"
+                   placeholder="Search for a book, author, category, comment..." aria-label="Search"
+                   aria-describedby="search-addon" />
+            <button type="submit" name="Reset" value="true" class="btn btn-outline-primary reset-button"
+                    data-mdb-ripple-init>
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <button type="submit" class="btn btn-outline-primary" data-mdb-ripple-init>Search</button>
+        </div>
+        <span asp-validation-for="Search" class="text-danger"></span>
+    </div>
+    
+    <div class="form-group mt-2">
+
+        <input asp-for="InTitle" type="checkbox" class="btn-check" autocomplete="off" />
+        <label asp-for="InTitle" class="btn btn-outline-secondary btn-sm" data-mdb-button-init
+            data-mdb-ripple-init>Title</label>
+        <span asp-validation-for="InTitle" class="text-danger"></span>
+
+        <input asp-for="InAuthor" type="checkbox" class="btn-check" autocomplete="off" />
+        <label asp-for="InAuthor" class="btn btn-outline-secondary btn-sm" data-mdb-button-init
+            data-mdb-ripple-init>Author</label>
+        <span asp-validation-for="InAuthor" class="text-danger"></span>
+
+        <input asp-for="InSummary" type="checkbox" class="btn-check" autocomplete="off" />
+        <label asp-for="InSummary" class="btn btn-outline-secondary btn-sm" data-mdb-button-init
+            data-mdb-ripple-init>Summary</label>
+        <span asp-validation-for="InSummary" class="text-danger"></span>
+
+        <input asp-for="InComment" type="checkbox" class="btn-check" autocomplete="off" />
+        <label asp-for="InComment" class="btn btn-outline-secondary btn-sm" data-mdb-button-init
+            data-mdb-ripple-init>Comment</label>
+        <span asp-validation-for="InComment" class="text-danger"></span>
+
+        <input asp-for="InPublisher" type="checkbox" class="btn-check" autocomplete="off" />
+        <label asp-for="InPublisher" class="btn btn-outline-secondary btn-sm" data-mdb-button-init
+            data-mdb-ripple-init>Publisher</label>
+        <span asp-validation-for="InPublisher" class="text-danger"></span>
+
+        <input asp-for="InGenre" type="checkbox" class="btn-check" autocomplete="off" />
+        <label asp-for="InGenre" class="btn btn-outline-secondary btn-sm" data-mdb-button-init
+            data-mdb-ripple-init>Genre</label>
+        <span asp-validation-for="InGenre" class="text-danger"></span>
+
+    </div>
+</form>
+</div>
+
+
+<div class="cont scrollable-col mt-2 ">
+    @foreach (var item in Model.BookDto.Take(6))
+    {
+        <div class="row mb-3 custom-row">
+            <div class="col-auto custom-col">
+                @if (!string.IsNullOrWhiteSpace(item.Book.ImageUrl))
+                {
+                    <a asp-page="/Books/Details" asp-route-id="@item.Book.Id">
+                        <img src="@item.Book.ImageUrl" alt="Book Image" width="130" />
+                    </a>
+                }
+            </div>
+            <div class="col-12 col-md-6">
+
+                <div class="row h-25">
+                    <h5 class="d-block mb-0">
+                        <a class="title" asp-page="/Books/Details" asp-route-id="@item.Book.Id">
+                            @Html.DisplayFor(modelItem => item.Book.Title)
+                        </a>
+
+                    </h5>
+                    <div class="author_title">
+                        @foreach (var author in item.Book.BookAuthors!)
+                        {
+                            <a asp-page="/Index" asp-route-Search="@author.Author!.FirstName @author.Author.LastName"
+                                asp-route-InAuthor="true" style="color: inherit; text-decoration: none">
+                                <span>@Html.DisplayFor(modelItem => author.Author!.FirstName) @Html.DisplayFor(modelItem =>
+                            author.Author!.LastName)</span>
+                            </a>
+                        }
+                    </div>
+                </div>
+                <div class="row align-items-center mt-2 h-50">
+                    <div class="d-block">
+                        @{
+                            var summary = item.Book.Summary;
+                            if (summary.Length > 300)
+                            {
+                                <span id="summary-@item.Book.Id">@Html.Raw(summary.Substring(0, 200))...</span>
+                                <span style="display: none;">@Html.Raw(summary)</span>
+                                <br>
+                                <a class="read-more" asp-page="/Books/Details" asp-route-id="@item.Book.Id">
+                                    Read More
+                                </a>
+                            }
+                            else
+                            {
+                                <span>@Html.Raw(summary)</span>
+                            }
+                        }
+                    </div>
+                </div>
+
+                <div class="row mb-1 h-25">
+
+                    @{
+                        double avgRating = item.AvgRating ?? 0;
+                        int ratingCount = item.RatingCount ?? 0;
+                        int reviewCount = item.ReviewCount ?? 0;
+                    }
+
+                    <div class="rating">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <span class="@(i <= avgRating ? "fa fa-star" : "fa fa-star-o")"
+                                style="color: @(i <= avgRating ? "#e87400" : "#8e8e97");"></span>
+                        }
+
+                        <span class="avg">@avgRating.ToString("0.0")</span>
+
+                        <span class="dd_col" style="font-size: 14px; padding-left: 5px;">@ratingCount ratings · @reviewCount
+                            reviews - published @Html.DisplayFor(modelItem => item.Book.PublicationYear)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+
+
+    @if (Model.BookDto.Count > 6)
+    {
+        <table class="table mt-5">
+
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BookDto[0].Book.Title)
+                    </th>
+                    <th>
+                        Authors
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BookDto[0].Book.ISBN)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BookDto[0].Book.PublicationYear)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BookDto[0].Book.Language)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BookDto[0].Book.Summary)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BookDto[0].Book.Publisher)
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.BookDto.Skip(6))
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Book.Title)
+                        </td>
+                        <td>
+                            @foreach (var author in item.Book.BookAuthors!)
+                            {
+                                @Html.DisplayFor(modelItem => author.Author!.FirstName)
+                                @Html.DisplayFor(modelItem => author.Author!.LastName)
+                                <br />
+                            }
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Book.ISBN)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Book.PublicationYear)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Book.Language)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Book.Summary)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Book.Publisher!.Name)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    }
+</div>

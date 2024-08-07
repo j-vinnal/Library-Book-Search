@@ -1,0 +1,379 @@
+@page "{id}"
+@model DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+@{
+    double avgRating = Model.BookDto.AvgRating ?? 0;
+    int ratingCount = Model.BookDto.RatingCount ?? 0;
+    int reviewCount = Model.BookDto.ReviewCount ?? 0;
+}
+
+
+<style>
+
+.sticky-nav{
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+}
+
+
+
+   .sticky-image-container {
+   margin-top: 66px;
+        position: sticky;
+       top: 76px;
+        z-index: 100; 
+    }
+    
+    .scrollable-col{
+    margin-top: 66px;
+    }
+    
+    .book_title {
+        font-size: 2.8rem;
+
+    }
+
+    .author_title {
+        font-size: 1.5rem;
+
+    }
+
+    .custom-col {
+        width: 224px;
+
+    }
+
+    a.title {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .avg {
+        font-size: 1.25em;
+        font-weight: 500;
+    }
+
+
+    .dt_head {
+        font-size: 14px;
+        font-weight: 400;
+
+    }
+
+    .dd_col {
+        font-size: 14px;
+        font-weight: 400;
+        color: #4f4f4d;
+    }
+
+    .reviews {
+        margin-top: 90px;
+        margin-bottom: 5px;
+    }
+
+    .main_comment {
+        border: 1px solid #5c636a;
+        border-radius: 20px;
+        padding: 20px;
+        width: 700px;
+    }
+
+    .sub_comment {
+        border: 1px solid #ffc107;
+        border-radius: 20px;
+        padding: 20px;
+
+        margin-left: 100px;
+
+    }
+
+    .reply {
+        border: 1px solid #ffc107;
+        border-radius: 20px;
+        padding: 20px;
+
+
+    }
+
+    .btno {
+        border: 1px solid #5c636a;
+        border-radius: 20px;
+        margin-top: 10px;
+    }
+</style>
+
+
+<div class="row overflow: hidden">
+    <div class="custom-col mt-2">
+        <div class="sticky-image-container">
+            @if (!string.IsNullOrWhiteSpace(Model.BookDto.Book.ImageUrl))
+            {
+                <a asp-page="/Books/Details" asp-route-id="@Model.BookDto.Book.Id">
+                    <img src="@Model.BookDto.Book.ImageUrl" alt="Book Image" width="200" />
+                </a>
+            }
+        </div>
+    </div>
+    <div class="col scrollable-col" style="padding-left: 40px;">
+        <div class="col-md-8">
+            <div class="row h-25">
+                <h5 class="d-block">
+                    <a class="title book_title" asp-page="/Books/Details" asp-route-id="@Model.BookDto.Book.Id">
+                        @Html.DisplayFor(modelItem => Model.BookDto.Book.Title)
+                    </a>
+
+                </h5>
+                <div class="d-block author_title">
+                    @foreach (var author in Model.BookDto.Book.BookAuthors!)
+                    {
+                        <a asp-page="/Index" asp-route-Search="@author.Author!.FirstName @author.Author.LastName"
+                            asp-route-InAuthor="true" style="color: inherit;">
+                            <span>
+                                @Html.DisplayFor(modelItem => author.Author!.FirstName) @Html.DisplayFor(modelItem =>
+                            author.Author!.LastName)
+                            </span>
+                        </a>
+                    }
+                </div>
+
+                <div class="row rating" style="font-size: 26px;">
+                    <div class="col-auto">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <span class="@(i <= avgRating ? "fa fa-star" : "fa fa-star-o")"
+                                style="color: @(i <= avgRating ? "#e87400" : "#8e8e97");">
+                            </span>
+                        }
+
+                        <span class="avg">@avgRating.ToString("0.0")</span>
+                    </div>
+                    <div class="col-auto" style="padding-left: 0;">
+                        <span class="dd_col">@ratingCount ratings · @reviewCount reviews</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-center mt-2">
+                <div class="col-md-12">
+
+                    <span> @Html.DisplayFor(modelItem => Model.BookDto.Book.Summary)</span>
+
+                </div>
+            </div>
+            <div class="row align-items-center mt-2">
+
+                <div class="col-auto">
+                    <span class="text-muted dt_head">Genres</span>
+                </div>
+
+
+                @foreach (var category in @Model.BookDto.Book.BookCategories!)
+                {
+                    <div class="col-auto" style="padding-left: 0;">
+                        <a asp-page="/Index" asp-route-Search="@category.Category!.Name" asp-route-InGenre="true"
+                            style="color: inherit;">
+                            @Html.DisplayFor(modelItem => category.Category!.Name)
+                        </a>
+                    </div>
+                }
+
+            </div>
+
+            <dl class="row mt-4">
+
+                <h6 class="text mb-4">This edition</h6>
+
+                <dt class="col-sm-2 dt_head text-muted">
+                    Published
+                </dt>
+                <dd class="col-sm-10 dd_col">
+                    Published @Html.DisplayFor(model => model.BookDto.Book.PublicationYear) by @Html.DisplayFor(model =>
+                    model.BookDto.Book.Publisher!.Name)
+                </dd>
+
+                <dt class="col-sm-2 dt_head text-muted">
+                    @Html.DisplayNameFor(model => model.BookDto.Book.ISBN)
+                </dt>
+                <dd class="col-sm-10 dd_col">
+                    @Html.DisplayFor(model => model.BookDto.Book.ISBN)
+                </dd>
+
+                <dt class="col-sm-2 dt_head text-muted">
+                    @Html.DisplayNameFor(model => model.BookDto.Book.Language)
+                </dt>
+                <dd class="col-sm-10 dd_col">
+                    @Html.DisplayFor(model => model.BookDto.Book.Language)
+                </dd>
+
+
+            </dl>
+
+            <form method="post" asp-page-handler="AddReview" id="addReviewForm">
+
+
+
+                <div class="row reviews">
+                    <div asp-validation-summary="ModelOnly" class="text-danger "></div>
+                    <div class="col col-auto d-flex text-center align-items-center">
+                        <h6 class="text">My rating:</h6>
+                    </div>
+                    <div class="col col-auto text-center" style="font-size: 26px;">
+                        <span id="star1" class="fa fa-star-o" style="color: #8e8e97;" onclick="highlightStars(1)">
+                        </span>
+                        <span id="star2" class="fa fa-star-o" style="color: #8e8e97;" onclick="highlightStars(2)">
+                        </span>
+                        <span id="star3" class="fa fa-star-o" style="color: #8e8e97;" onclick="highlightStars(3)">
+                        </span>
+                        <span id="star4" class="fa fa-star-o" style="color: #8e8e97;" onclick="highlightStars(4)">
+                        </span>
+                        <span id="star5" class="fa fa-star-o" style="color: #8e8e97;" onclick="highlightStars(5)">
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    <input type="hidden" asp-for="@Model.ReviewRating" id="ReviewRating" />
+
+                    <textarea class="form-control main_comment" rows="4" asp-for="ReviewComment"
+                        placeholder="Enter your review"></textarea>
+                    <span asp-validation-for="@Model.ReviewComment" class="text-danger"></span>
+                </div>
+                <input type="hidden" asp-for="@Model.BookId" value="@Model.BookDto.Book.Id" />
+                <div class="form-group">
+
+                    <button class="btn btn-default btno" type="submit">
+                        <i class="fa fa-comments-o"></i> Comment
+                    </button>
+                </div>
+            </form>
+
+            @if (Model.BookDto.Book.Reviews?.Count > 0)
+            {
+                <div class="revi">
+                    <h6 class="text mt-5">Community Reviews</h6>
+                    @foreach (var review in Model.BookDto.Book.Reviews!.OrderByDescending(sc => sc.CreatedAtDt))
+
+                    {
+                        <div class="cont mt-4 mb-5">
+
+
+                            <div class="main_comment">
+                                <div class="row mt-2">
+                                    <div class="col">
+                                        <div class="rating">
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                <span class="@(i <= review.Rating ? "fa fa-star" : "fa fa-star-o")"
+                                                    style="color: @(i <= review.Rating ? "#e87400" : "#8e8e97");">
+                                                </span>
+                                            }
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <span class="text dd_col">@review.CreatedAtDt</span>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="row mt-3">
+                                    <div class="col col-md-12">
+                                        <span class="text">@review.Comment</span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row mt-3">
+                                <div class="col col-md-5">
+                                    <form method="post" asp-page-handler="AddReply">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <textarea class="form-control  reply" rows="1" asp-for="ReviewComment"
+                                                    style="border-color: #5c636a; padding: 10px" placeholder="Reply"></textarea>
+
+
+                                                <button class="btn btn-default btno" style="margin-top: 0;" type="submit">
+                                                    <i class="fa fa-comments-o"></i> Reply
+                                                </button>
+
+                                            </div>
+                                            <span asp-validation-for="@Model.ReviewComment" class="text-danger"></span>
+                                        </div>
+
+                                        <input type="hidden" asp-for="@Model.BookId" value="@Model.BookDto.Book.Id" />
+                                        <input type="hidden" asp-for="@Model.ReviewId" value="@review.Id" />
+                                    </form>
+                                </div>
+
+                                <div class="col col-md-7 mb-2">
+                                    @if (review.SubComments?.Any() == true)
+                                    {
+                                        @foreach (var subComment in review.SubComments.OrderByDescending(sc => sc.CreatedAtDt))
+                                        {
+                                            <div class="sub_comment mb-2 d-flex justify-content-between">
+                                                <span class="text" style="text-align: start">@subComment.Comment</span>
+                                                <span class="text dd_col" style="text-align: end">@subComment.CreatedAtDt</span>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+
+
+                        </div>
+                    }
+                </div>
+            }
+
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    let reviewRating = 0;
+    function highlightStars(rating) {
+
+
+        reviewRating = rating;
+
+
+        if ((document.getElementById(`star${5}`).className === "fa fa-star" && rating === 5) || (document.getElementById(`star${rating}`).className === "fa fa-star" && document.getElementById(`star${rating + 1}`).className === "fa fa-star-o")) {
+            for (let i = 1; i <= 5; i++) {
+                document.getElementById(`star${i}`).className = "fa fa-star-o";
+                document.getElementById(`star${i}`).style.color = "#8e8e97";
+
+            }
+
+        }
+        else {
+
+            for (let i = 1; i <= 5; i++) {
+                if (i <= rating) {
+                    document.getElementById(`star${i}`).className = "fa fa-star";
+                    document.getElementById(`star${i}`).style.color = "#e87400";
+                }
+                else {
+
+                    document.getElementById(`star${i}`).className = "fa fa-star-o";
+                    document.getElementById(`star${i}`).style.color = "#8e8e97";
+                }
+            }
+
+        }
+    }
+
+    document.getElementById("addReviewForm").addEventListener("submit", function () {
+        document.getElementById("ReviewRating").value = reviewRating;
+    });
+</script>

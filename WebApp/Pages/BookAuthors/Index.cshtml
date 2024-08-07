@@ -1,0 +1,54 @@
+@page
+@model IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BookAuthor[0].Book)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BookAuthor[0].Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BookAuthor[0].CreatedAtDt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BookAuthor[0].UpdatedAtDt)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.BookAuthor) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Book!.ISBN)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author!.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAtDt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedAtDt)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-bookId="@item.BookId" asp-route-authorId="@item.AuthorId">Edit</a> |
+                <a asp-page="./Details" asp-route-bookId="@item.BookId" asp-route-authorId="@item.AuthorId">Details</a> |
+                <a asp-page="./Delete" asp-route-bookId="@item.BookId" asp-route-authorId="@item.AuthorId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

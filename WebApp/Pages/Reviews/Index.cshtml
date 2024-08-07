@@ -1,0 +1,66 @@
+@page
+@model IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Review[0].Comment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Review[0].Rating)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Review[0].ParentComment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Review[0].Book)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Review[0].CreatedAtDt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Review[0].UpdatedAtDt)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Review) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rating)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ParentComment!.Comment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Book!.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAtDt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedAtDt)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

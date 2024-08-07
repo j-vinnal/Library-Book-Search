@@ -1,0 +1,85 @@
+@page
+@model IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+         <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Book[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Book[0].ISBN)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Book[0].PublicationYear)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Book[0].Language)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Book[0].Summary)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Book[0].Publisher)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Book[0].CreatedAtDt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Book[0].UpdatedAtDt)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Book) {
+    <tr>
+        <th>
+            @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
+            {
+            <img src="@item.ImageUrl" alt="Book Image" width="130"/>
+            }
+        </th>
+        <td>
+            @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ISBN)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PublicationYear)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Language)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Summary)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Publisher!.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreatedAtDt)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UpdatedAtDt)
+        </td>
+        <td>
+            <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+            <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+            <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+        </td>
+    </tr>
+}
+    </tbody>
+</table>
