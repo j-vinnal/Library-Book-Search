@@ -5,8 +5,9 @@
 This is a Razor Pages C# web application for managing a list of books and performing searches. The application allows users to perform CRUD operations on books, add comments/discussions, generate statistics for books and authors, and perform comprehensive searches.
 
 ![Book Search](bookSearch.png)
-![Book Reviews](bookReviews.png)
 ![Book Details](bookDetails.png)
+![Book Reviews](bookReviews.png)
+
 
 ## Features
 
